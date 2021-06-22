@@ -1,0 +1,45 @@
+<div class="table-container" id="tableContainer" [style.height.px]="tableHeight" [style.width.px]="tableWidth">
+  <div class="table-header-container"
+       [style.height.px]="headerHeight"
+       [style.width.px]="dataContainerWidth"
+       [style.transform]="'translateX(' + -dataContainerTranslate3d.x + 'px)'"
+  >
+    <div class="table-column-header"
+         *ngFor="let column of columnInfos; let columnIndex = index"
+         [style.width.px]="column.width"
+         [style.left.px]="columnIndex === 0 && stickyFirstColumn ? dataContainerTranslate3d.x : 0"
+         [style.z-index]="columnIndex === 0 && stickyFirstColumn ? 100 : 0"
+         (mouseenter)="helper.addColumnResizeInteract(columnInfos, columnIndex, service)"
+    >
+      {{ column.name }}
+      <div
+        class="drag-line-left"
+        *ngIf="columnIndex !== 0"
+        [ngClass]="tableSizeConfig.draggingColumnIndex === -1 ? 'drag-line-hover' : ''"
+      >
+        <div
+          class="drag-line"
+          [ngClass]="
+                      tableSizeConfig.draggingColumnIndex === columnIndex - 1 ? 'drag' : ''
+                    "
+        ></div>
+      </div>
+      <div
+        class="drag-line-right"
+        *ngIf="columnIndex === columnInfos.length - 1"
+        [ngClass]="tableSizeConfig.draggingColumnIndex === -1 ? 'drag-line-hover' : ''"
+      >
+        <div
+          class="drag-line"
+          [ngClass]="tableSizeConfig.draggingColumnIndex === columnIndex ? 'drag' : ''"
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div TowifyTable class="data-container"
+       [style.width.px]="dataContainerWidth"
+       [style.height.px]="dataContainerHeight + headerHeight > tableHeight ? dataContainerHeight : tableHeight - headerHeight"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>
