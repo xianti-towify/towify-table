@@ -4,6 +4,7 @@
  * */
 
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { TowifyRowDefDirective } from './driectives/towify.row.def.directive';
 import { TowifyTableDirective } from './driectives/towify.table.directive';
@@ -18,14 +19,8 @@ import { TowifyTableService } from './service/towify.table.service';
     TowifyTableDirective,
     TowifyTableComponent
   ],
-  imports: [
-    BrowserModule
-  ],
+  imports: [BrowserModule, CommonModule],
   providers: [TowifyTableService],
-  exports: [
-    TowifyCellDefDirective,
-    TowifyRowDefDirective,
-    TowifyTableComponent
-  ]
+  exports: [TowifyCellDefDirective, TowifyRowDefDirective, TowifyTableComponent]
 })
-export class TowifyTableModule { }
+export class TowifyTableModule {}

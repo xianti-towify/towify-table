@@ -7,7 +7,24 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.html": "prettier --write --parser angular",
+    "*.component.html": "prettier --write --parser angular",
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md,json,scss}": "prettier --write"
   },
   "private": true,
   "dependencies": {
@@ -15,7 +32,7 @@
     "@angular/common": "^11.2.12",
     "@angular/compiler": "^11.2.12",
     "@angular/core": "^11.2.12",
-    "@angular/forms":"^11.2.12",
+    "@angular/forms": "^11.2.12",
     "@angular/platform-browser": "^11.2.12",
     "@angular/platform-browser-dynamic": "^11.2.12",
     "@angular/router": "^11.2.12",
@@ -45,7 +62,7 @@
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.23.2",
-    "husky": "^6.0.0",
+    "husky": "^7.0.0",
     "jasmine-core": "^3.7.1",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "^6.3.2",
