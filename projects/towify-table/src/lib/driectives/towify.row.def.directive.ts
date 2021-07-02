@@ -48,17 +48,17 @@ export class TowifyRowDefDirective {
           index
         });
       } else if (currentView.context.index !== index) {
-          if (currentView.context.index < index) {
-            // 创建个新的
-            this.viewContainerRef.remove(index - this.service.renderRange.startIndex);
-            index -= 1;
-          } else {
-            currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
-              $implicit: this.service.renderDataSource[index - this.service.renderRange.startIndex],
-              index
-            });
-           this.viewContainerRef.move(currentView, index - this.service.renderRange.startIndex);
-          }
+        if (currentView.context.index < index) {
+          // 创建个新的
+          this.viewContainerRef.remove(index - this.service.renderRange.startIndex);
+          index -= 1;
+        } else {
+          currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+            $implicit: this.service.renderDataSource[index - this.service.renderRange.startIndex],
+            index
+          });
+          this.viewContainerRef.move(currentView, index - this.service.renderRange.startIndex);
+        }
       } else {
         currentView.context.$implicit = this.service.renderDataSource[index - this.service.renderRange.startIndex];
         currentView.context.index = index;

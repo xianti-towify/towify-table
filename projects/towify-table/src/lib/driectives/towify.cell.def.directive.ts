@@ -26,7 +26,7 @@ export class TowifyCellDefDirective {
     this.service.columnInfos.forEach((columnInfo, index) => {
       let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(index) as EmbeddedViewRef<any>;
       if (!currentView) {
-       currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+        currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
           $implicit: columnInfo,
           index
         });

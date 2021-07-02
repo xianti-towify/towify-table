@@ -22,10 +22,9 @@ import { TowifyCellDefDirective } from './driectives/towify.cell.def.directive';
   ],
   providers: [],
   exports: [
-    TowifyTableDirective,
+    TowifyCellDefDirective,
     TowifyRowDefDirective,
-    TowifyTableComponent,
-    TowifyCellDefDirective
+    TowifyTableComponent
   ],
   bootstrap: []
 })
