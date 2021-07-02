@@ -15,19 +15,6 @@ export type TableColumnInfoType = {
   width?: number;
 };
 
-export declare enum TableFieldValueEnum {
-  Id = 'id',
-  Text = 'text',
-  YesOrNo = 'yesOrNo',
-  Number = 'number',
-  EncryptedText = 'encryptedText',
-  Date = 'date',
-  Image = 'image',
-  Audio = 'audio',
-  Video = 'video',
-  Table = 'table'
-}
-
 export const tableSizeConfigInfo = {
   tableWidth: 500,
   tableHeight: 700,

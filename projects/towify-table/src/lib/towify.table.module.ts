@@ -9,6 +9,7 @@ import { TowifyRowDefDirective } from './driectives/towify.row.def.directive';
 import { TowifyTableDirective } from './driectives/towify.table.directive';
 import { TowifyTableComponent } from './towify-table/towify-table.component';
 import { TowifyCellDefDirective } from './driectives/towify.cell.def.directive';
+import { TowifyTableService } from './service/towify.table.service';
 
 @NgModule({
   declarations: [
@@ -20,12 +21,11 @@ import { TowifyCellDefDirective } from './driectives/towify.cell.def.directive';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [TowifyTableService],
   exports: [
     TowifyCellDefDirective,
     TowifyRowDefDirective,
     TowifyTableComponent
-  ],
-  bootstrap: []
+  ]
 })
 export class TowifyTableModule { }
