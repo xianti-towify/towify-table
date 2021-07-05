@@ -1,0 +1,40 @@
+<div
+  class="table-container"
+  id="tableContainer"
+  [style.height.px]="tableHeight"
+  [style.width.px]="tableWidth"
+>
+  <div
+    class="table-header-container"
+    [style.height.px]="headerHeight"
+    [style.width.px]="service.dataContainerWidth"
+    [style.transform]="'translateX(' + -service.dataContainerTranslate3d.x + 'px)'"
+  >
+    <!--    内容投影 插入 tableHeader 属性的 div 标签 -->
+    <ng-content select="[tableHeader]"></ng-content>
+  </div>
+  <div
+    TowifyTable
+    class="data-container"
+    [style.width.px]="service.dataContainerWidth"
+    [style.height.px]="
+      service.dataContainerHeight + headerHeight > tableHeight
+        ? service.dataContainerHeight
+        : tableHeight - headerHeight
+    "
+  >
+    <!--    内容投影 插入 tableRow 属性的 div 标签 -->
+    <ng-content select="[tableRow]"></ng-content>
+    <!--    放置 footer 的容器 -->
+    <div
+      class="footer-container"
+      [style.width.px]="tableWidth"
+      [style.height.px]="footerHeight"
+      [style.top.px]="dataSource.data.length * rowHeight"
+      [style.left.px]="service.dataContainerTranslate3d.x"
+    >
+      <!--    内容投影 插入 tableFooter 属性的 div 标签 -->
+      <ng-content select="[tableFooter]"></ng-content>
+    </div>
+  </div>
+</div>

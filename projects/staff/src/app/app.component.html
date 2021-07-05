@@ -1,0 +1,23 @@
+<towify-table
+  [dataSource]="tableDataSource"
+  [columnInfos]="columnInfos"
+  [stickyFirstColumn]="true"
+  [rowHeight]="rowHeight"
+>
+  <div tableHeader class="table-header" *towifyHeaderDef="let column">
+    <span>{{ column.displayName }}</span>
+  </div>
+  <div class="table-row" tableRow *towifyRowDef="let row">
+    <div class="table-cell" *towifyCellDef="let column">
+      <div *ngIf="column.type === 'text'" style="text-align: center; width: 100%; height: 100%">{{
+        row[column.hashName]
+      }}</div>
+      <img
+        style="width: 35px; height: 35px"
+        [src]="row[column.hashName]"
+        alt=""
+        *ngIf="column.type === 'image'"
+      />
+    </div>
+  </div>
+</towify-table>
