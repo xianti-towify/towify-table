@@ -22,7 +22,7 @@ export class TowifyTableDirective implements OnDestroy {
     const scroll = (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
-      const lastTransformY = this.service.dataContainerTranslate3d.y;
+      const lastTransform = JSON.parse(JSON.stringify(this.service.dataContainerTranslate3d));
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
         if (event.deltaX >= 0) {
           this.service.scrollDirection = 'right';
@@ -75,7 +75,11 @@ export class TowifyTableDirective implements OnDestroy {
         this.service.renderRange.startIndex,
         this.service.renderRange.endIndex
       );
-      if (lastTransformY === this.service.dataContainerTranslate3d.y) return;
+      if (
+        lastTransform.y === this.service.dataContainerTranslate3d.y &&
+        lastTransform.x === this.service.dataContainerTranslate3d.x
+      )
+        return;
       this.service.updateRender();
     };
     el.nativeElement.addEventListener('wheel', scroll, true);
