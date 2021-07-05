@@ -3,7 +3,7 @@
  * @Date    : 2021/6/11
  * */
 
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { TableColumnInfoType } from '../type/towify.table.type';
 import { ITowifyTableService } from '../interface/towify.table.service.interface';
 
@@ -11,10 +11,9 @@ import { ITowifyTableService } from '../interface/towify.table.service.interface
   providedIn: 'root'
 })
 export class TowifyTableService implements ITowifyTableService {
-  #updateRenderCallbacks: (() => void)[] = [];
-  #updateRenderConfigCallbacks: (() => void)[] = [];
-
   #dataSource: { [key: string]: any }[] = [];
+
+  updateRenderObserve: EventEmitter<any> = new EventEmitter<any>();
   renderDataSource: { [key: string]: string | number | boolean | Date }[] = [];
   renderRange: { startIndex: number; endIndex: number } = { startIndex: 0, endIndex: 10 };
   dataContainerTranslate3d: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 };
@@ -87,24 +86,11 @@ export class TowifyTableService implements ITowifyTableService {
       tableWidth += columnInfo.width ?? 100;
     });
     this.dataContainerWidth = tableWidth;
-    this.#updateRenderConfigCallbacks.forEach(value => {
-      value();
-    });
     this.updateRender();
   }
 
   public updateRender(): void {
-    this.#updateRenderCallbacks.forEach(value => {
-      value();
-    });
-  }
-
-  public onUpdateRenderCallback(callback: () => void): void {
-    this.#updateRenderCallbacks.push(callback);
-  }
-
-  public onUpdateRenderConfigCallback(callback: () => void): void {
-    this.#updateRenderConfigCallbacks.push(callback);
+    this.updateRenderObserve.emit();
   }
 
   public scrollToIndex(index: number): void {

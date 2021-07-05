@@ -3,15 +3,17 @@
  * @Date    : 2021/6/11
  * */
 
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, OnDestroy } from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
   selector: '[TowifyTable]'
 })
-export class TowifyTableDirective {
+export class TowifyTableDirective implements OnDestroy {
+  #updateRenderObserve: any;
+
   constructor(private readonly el: ElementRef, private readonly service: TowifyTableService) {
-    this.service.onUpdateRenderConfigCallback(() => {
+    this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
       this.el.nativeElement.style.transform = `translate3d(${-this.service.dataContainerTranslate3d
         .x}px,
        ${-this.service.dataContainerTranslate3d.y}px,
@@ -62,10 +64,6 @@ export class TowifyTableDirective {
           this.service.dataContainerTranslate3d.y = 0;
         }
       }
-      this.el.nativeElement.style.transform = `translate3d(${-this.service.dataContainerTranslate3d
-        .x}px,
-       ${-this.service.dataContainerTranslate3d.y}px,
-       ${-this.service.dataContainerTranslate3d.z}px)`;
       this.service.renderRange.startIndex = Math.floor(
         this.service.dataContainerTranslate3d.y / this.service.rowHeight
       );
@@ -81,5 +79,9 @@ export class TowifyTableDirective {
       this.service.updateRender();
     };
     el.nativeElement.addEventListener('wheel', scroll, true);
+  }
+
+  ngOnDestroy() {
+    this.#updateRenderObserve.unsubscribe();
   }
 }

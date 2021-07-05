@@ -3,23 +3,22 @@
  * @Date    : 2021/6/11
  * */
 
-import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
   selector: '[towifyHeaderDef]'
 })
-export class TowifyHeaderDefDirective {
+export class TowifyHeaderDefDirective implements OnDestroy {
+  #updateRenderObserve: any;
+
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
     private readonly service: TowifyTableService
   ) {
     this.updateRenderHeader();
-    this.service.onUpdateRenderConfigCallback(() => {
-      this.updateRenderHeader();
-    });
-    this.service.onUpdateRenderCallback(() => {
+    this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
       this.updateRenderHeader();
     });
   }
@@ -43,5 +42,9 @@ export class TowifyHeaderDefDirective {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.#updateRenderObserve.unsubscribe();
   }
 }

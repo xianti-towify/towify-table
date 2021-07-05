@@ -3,23 +3,28 @@
  * @Date    : 2021/6/11
  * */
 
-import { Directive, EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  EmbeddedViewRef,
+  OnDestroy,
+  TemplateRef,
+  ViewContainerRef
+} from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
   selector: '[towifyRowDef]'
 })
-export class TowifyRowDefDirective {
+export class TowifyRowDefDirective implements OnDestroy {
+  #updateRenderObserve: any;
+
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
     private readonly service: TowifyTableService
   ) {
     this.updateRenderRow();
-    this.service.onUpdateRenderConfigCallback(() => {
-      this.updateRenderRow();
-    });
-    this.service.onUpdateRenderCallback(() => {
+    this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
       this.updateRenderRow();
     });
   }
@@ -85,5 +90,9 @@ export class TowifyRowDefDirective {
     while (this.viewContainerRef.length > this.service.renderDataSource.length) {
       this.viewContainerRef.remove(this.viewContainerRef.length - 1);
     }
+  }
+
+  ngOnDestroy() {
+    this.#updateRenderObserve.unsubscribe();
   }
 }
