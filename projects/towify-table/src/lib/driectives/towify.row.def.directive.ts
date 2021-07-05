@@ -9,7 +9,6 @@ import { TowifyTableService } from '../service/towify.table.service';
 @Directive({
   selector: '[towifyRowDef]'
 })
-
 export class TowifyRowDefDirective {
   constructor(
     private readonly templateRef: TemplateRef<any>,
@@ -17,6 +16,9 @@ export class TowifyRowDefDirective {
     private readonly service: TowifyTableService
   ) {
     this.updateRenderRow();
+    this.service.onUpdateRenderConfigCallback(() => {
+      this.updateRenderRow();
+    });
     this.service.onUpdateRenderCallback(() => {
       this.updateRenderRow();
     });
@@ -40,8 +42,14 @@ export class TowifyRowDefDirective {
       this.viewContainerRef.clear();
       return;
     }
-    for (let index = this.service.renderRange.startIndex; index < this.service.renderRange.endIndex; index += 1) {
-      let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(index - this.service.renderRange.startIndex) as EmbeddedViewRef<any>;
+    for (
+      let index = this.service.renderRange.startIndex;
+      index < this.service.renderRange.endIndex;
+      index += 1
+    ) {
+      let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(
+        index - this.service.renderRange.startIndex
+      ) as EmbeddedViewRef<any>;
       if (!currentView) {
         currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
           $implicit: this.service.renderDataSource[index - this.service.renderRange.startIndex],
@@ -60,7 +68,8 @@ export class TowifyRowDefDirective {
           this.viewContainerRef.move(currentView, index - this.service.renderRange.startIndex);
         }
       } else {
-        currentView.context.$implicit = this.service.renderDataSource[index - this.service.renderRange.startIndex];
+        currentView.context.$implicit =
+          this.service.renderDataSource[index - this.service.renderRange.startIndex];
         currentView.context.index = index;
       }
       const element: HTMLElement = currentView.rootNodes[0];
@@ -70,7 +79,7 @@ export class TowifyRowDefDirective {
         element.style.flexDirection = 'row';
         element.style.width = '100%';
         element.style.height = `${this.service.rowHeight}px`;
-        element.style.top = `${ index * this.service.rowHeight }px`;
+        element.style.top = `${index * this.service.rowHeight}px`;
       }
     }
     while (this.viewContainerRef.length > this.service.renderDataSource.length) {

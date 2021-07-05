@@ -1,44 +1,37 @@
 /**
  * @Author  : xiongxianti
- * @Date    : 2021/6/16
+ * @Date    : 2021/6/11
  * */
 
-import { Directive, EmbeddedViewRef, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
-  selector: '[towifyCellDef]'
+  selector: '[towifyHeaderDef]'
 })
-export class TowifyCellDefDirective {
+export class TowifyHeaderDefDirective {
   constructor(
     private readonly templateRef: TemplateRef<any>,
     private readonly viewContainerRef: ViewContainerRef,
     private readonly service: TowifyTableService
   ) {
-    this.updateRenderCell();
+    this.updateRenderHeader();
     this.service.onUpdateRenderConfigCallback(() => {
-      this.updateRenderCell();
+      this.updateRenderHeader();
     });
     this.service.onUpdateRenderCallback(() => {
-      this.updateRenderCell();
+      this.updateRenderHeader();
     });
   }
 
-  updateRenderCell(): void {
+  updateRenderHeader(): void {
+    this.viewContainerRef.clear();
     this.service.columnInfos.forEach((columnInfo, index) => {
-      let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(
+      const headerView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+        $implicit: columnInfo,
         index
-      ) as EmbeddedViewRef<any>;
-      if (!currentView) {
-        currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
-          $implicit: columnInfo,
-          index
-        });
-      } else {
-        currentView.context.$implicit = columnInfo;
-        currentView.context.index = index;
-      }
-      const element: HTMLElement = currentView.rootNodes[0];
+      });
+      const element: HTMLElement = headerView.rootNodes[0];
       if (element) {
         element.style.position = 'relative';
         element.style.boxSizing = 'border-box';

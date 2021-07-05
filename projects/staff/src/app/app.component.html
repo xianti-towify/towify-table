@@ -1,16 +1,17 @@
 <towify-table
-  [dataSource]="dataSource"
+  [dataSource]="tableDataSource"
   [columnInfos]="columnInfos"
   [stickyFirstColumn]="true"
-  [tableHeight]="600"
-  [tableWidth]="700"
   [rowHeight]="rowHeight"
 >
-  <div *towifyRowDef="let row; let rowIndex = index">
-    <div *towifyCellDef="let column; let columnIndex = index">
-      <div *ngIf="column.type === 'text'" style="text-align: center; width: 100%; height: 100%"
-        >{{ row[column.id] }} ({{ rowIndex }}, {{ columnIndex }})</div
-      >
+  <div tableHeader class="table-header" *towifyHeaderDef="let column">
+    <span>{{ column.displayName }}</span>
+  </div>
+  <div class="table-row" tableRow *towifyRowDef="let row; let rowIndex = index">
+    <div class="table-cell" *towifyCellDef="let column; let columnIndex = index">
+      <div *ngIf="column.type === 'text'" style="text-align: center; width: 100%; height: 100%">{{
+        row[column.displayName]
+      }}</div>
       <img
         style="width: 35px; height: 35px"
         [src]="row[column.id]"
@@ -20,5 +21,3 @@
     </div>
   </div>
 </towify-table>
-
-<div *ngFor="let a of dataSource"></div>

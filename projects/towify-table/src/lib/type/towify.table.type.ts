@@ -3,17 +3,15 @@
  * @Date    : 2021/6/16
  * */
 
-export type TableFieldValueType = 'id' | 'text' | 'yesOrNo' | 'number' | 'encryptedText' | 'date' | 'image' | 'audio' | 'video' | 'table'
-
 export type TableScrollDirectionType = 'up' | 'down' | 'left' | 'right' | 'unknown';
 
 export type TableColumnInfoType = {
-  name: string;
-  id: string;
-  type: TableFieldValueType;
+  displayName: string;
+  hashName: string;
+  type: string;
   iconName: string;
   width?: number;
-};
+} & { [key: string]: any };
 
 export const tableSizeConfigInfo = {
   tableWidth: 500,
@@ -21,9 +19,8 @@ export const tableSizeConfigInfo = {
   defaultColumnWidth: 200,
   minColumnWidth: 40,
   headerHeight: 40,
-  rowHeight: 40,
-  draggingColumnIndex: -1,
-  selectedColumnIndex: -1
+  footerHeight: 40,
+  rowHeight: 40
 };
 
 export const tableStatusConfigInfo = {

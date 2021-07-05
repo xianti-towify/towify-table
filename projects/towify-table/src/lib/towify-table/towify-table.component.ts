@@ -1,7 +1,21 @@
-import { Component, HostListener, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+/**
+ * @Author  : xiongxianti
+ * @Date    : 2021/6/11
+ * */
+
+import {
+  Component,
+  ContentChild,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  TemplateRef
+} from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 import { TableColumnInfoType, tableSizeConfigInfo } from '../type/towify.table.type';
-import { TowifyTableHelper } from '../util/towify.table.helper';
+import { TowifyTableDatasource } from './towify.table.datasource';
 
 @Component({
   selector: 'towify-table',
@@ -9,9 +23,10 @@ import { TowifyTableHelper } from '../util/towify.table.helper';
   styleUrls: ['./towify-table.component.scss']
 })
 export class TowifyTableComponent implements OnInit, OnChanges {
+  @ContentChild('header', { static: false }) headerTemplate!: TemplateRef<{ [key: string]: any }>;
 
   @Input()
-  dataSource: { [key: string]: string | number | boolean | Date }[] = [];
+  dataSource: TowifyTableDatasource = new TowifyTableDatasource();
 
   @Input()
   rowHeight = tableSizeConfigInfo.rowHeight;
@@ -20,10 +35,7 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   headerHeight = tableSizeConfigInfo.headerHeight;
 
   @Input()
-  tableHeight = tableSizeConfigInfo.tableHeight;
-
-  @Input()
-  tableWidth = tableSizeConfigInfo.tableWidth;
+  footerHeight = tableSizeConfigInfo.footerHeight;
 
   @Input()
   stickyFirstColumn = false;
@@ -31,44 +43,55 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   @Input()
   columnInfos: TableColumnInfoType[] = [];
 
-  dataContainerTranslate3d: { x: number; y: number; z: number; } = { x: 0, y: 0, z: 0 };
-  dataContainerWidth = 0;
-  dataContainerHeight = 0;
-  tableSizeConfig = tableSizeConfigInfo;
-  helper = TowifyTableHelper;
+  tableHeight = tableSizeConfigInfo.tableHeight;
+  tableWidth = tableSizeConfigInfo.tableWidth;
 
-  constructor(public readonly service: TowifyTableService) {
-    this.service.onUpdateRenderConfigCallback(() => {
-      this.dataContainerWidth = this.service.dataContainerWidth;
-    });
-    this.service.onUpdateRenderCallback(() => {
-      this.dataContainerTranslate3d = this.service.dataContainerTranslate3d;
+  constructor(private readonly el: ElementRef, public readonly service: TowifyTableService) {
+    window.addEventListener('resize', () => {
+      this.tableWidth = (this.el.nativeElement as HTMLElement).clientWidth;
+      this.tableHeight = (this.el.nativeElement as HTMLElement).clientHeight;
+      // 当窗口变更的时候，如果窗口缩小，y 轴渲染范围不需要处理，如果窗口扩大，当内容没触底 y 轴渲染不需要处理，如果触底了，需要调整 y 轴
+      this.updateServiceRenderConfig();
     });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.service.tableContainerHeight = this.tableHeight;
-    this.service.tableContainerWidth = this.tableWidth;
-    this.service.dataContainerHeight = this.dataSource.length * this.rowHeight;
-    this.service.headerHeight = this.headerHeight;
-    this.service.rowHeight = this.rowHeight;
-    this.service.renderItemSize = Math.ceil(this.tableHeight/this.rowHeight) + 2;
-    this.service.columnInfos = this.columnInfos;
-    this.service.stickyFirstColumn = this.stickyFirstColumn;
-    this.service.dataSource = this.dataSource;
-    this.dataContainerHeight = this.service.dataContainerHeight;
-    if (this.service.renderDataSource.length === 0) {
-      this.service.renderDataSource = this.dataSource.slice(0, this.service.renderItemSize);
-    }
-    if (this.service.renderRange.endIndex - this.service.renderRange.startIndex !== this.service.renderItemSize) {
-      this.service.renderRange.endIndex = this.service.renderRange.startIndex + this.service.renderItemSize;
-      this.service.renderDataSource = this.dataSource.slice(this.service.renderRange.startIndex, this.service.renderRange.endIndex);
-    }
-    this.service.dataContainerTranslate3d.y = this.service.renderRange.startIndex * this.service.rowHeight;
-    this.service.updateRenderConfig();
+    this.service.tableContainerHeight = changes.tableHeight
+      ? changes.tableHeight.currentValue
+      : this.tableHeight;
+    this.service.tableContainerWidth = changes.tableWidth
+      ? changes.tableWidth.currentValue
+      : this.tableWidth;
+    this.service.headerHeight = changes.headerHeight
+      ? changes.headerHeight.currentValue
+      : this.headerHeight;
+    this.service.footerHeight = changes.footerHeight
+      ? changes.footerHeight.currentValue
+      : this.footerHeight;
+    this.service.rowHeight = changes.rowHeight ? changes.rowHeight.currentValue : this.rowHeight;
+    this.service.columnInfos = changes.columnInfos
+      ? changes.columnInfos.currentValue
+      : this.columnInfos;
+    this.service.stickyFirstColumn = changes.stickyFirstColumn
+      ? changes.stickyFirstColumn.currentValue
+      : this.stickyFirstColumn;
+    const dataSource: TowifyTableDatasource = changes.dataSource
+      ? changes.dataSource.currentValue
+      : this.dataSource;
+    this.service.dataSource = dataSource.data;
+    this.updateServiceRenderConfig();
   }
 
   ngOnInit(): void {
+    this.dataSource.service = this.service;
+    this.tableWidth = (this.el.nativeElement as HTMLElement).clientWidth;
+    this.tableHeight = (this.el.nativeElement as HTMLElement).clientHeight;
+    this.updateServiceRenderConfig();
   }
 
+  private updateServiceRenderConfig(): void {
+    this.service.tableContainerHeight = this.tableHeight;
+    this.service.tableContainerWidth = this.tableWidth;
+    this.service.updateRenderConfig();
+  }
 }
