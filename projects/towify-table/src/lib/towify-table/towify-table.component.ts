@@ -14,7 +14,7 @@ import {
   TemplateRef
 } from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
-import { TableColumnInfoType, tableSizeConfigInfo } from '../type/towify.table.type';
+import { TableColumnInfoType } from '../type/towify.table.type';
 import { TowifyTableDatasource } from './towify.table.datasource';
 
 @Component({
@@ -29,13 +29,13 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   dataSource: TowifyTableDatasource = new TowifyTableDatasource();
 
   @Input()
-  rowHeight = tableSizeConfigInfo.rowHeight;
+  rowHeight = 40;
 
   @Input()
-  headerHeight = tableSizeConfigInfo.headerHeight;
+  headerHeight = 40;
 
   @Input()
-  footerHeight = tableSizeConfigInfo.footerHeight;
+  footerHeight = 40;
 
   @Input()
   stickyFirstColumn = false;
@@ -43,8 +43,8 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   @Input()
   columnInfos: TableColumnInfoType[] = [];
 
-  tableHeight = tableSizeConfigInfo.tableHeight;
-  tableWidth = tableSizeConfigInfo.tableWidth;
+  tableHeight = 500;
+  tableWidth = 700;
 
   constructor(private readonly el: ElementRef, public readonly service: TowifyTableService) {
     window.addEventListener('resize', () => {

@@ -4,11 +4,7 @@
  * */
 
 import { Injectable } from '@angular/core';
-import {
-  TableColumnInfoType,
-  TableScrollDirectionType,
-  tableSizeConfigInfo
-} from '../type/towify.table.type';
+import { TableColumnInfoType } from '../type/towify.table.type';
 import { ITowifyTableService } from '../interface/towify.table.service.interface';
 
 @Injectable({
@@ -32,7 +28,7 @@ export class TowifyTableService implements ITowifyTableService {
   tableContainerWidth = 0;
   tableContainerHeight = 0;
   stickyFirstColumn = false;
-  scrollDirection: TableScrollDirectionType = 'unknown';
+  scrollDirection: 'up' | 'down' | 'left' | 'right' | 'unknown' = 'unknown';
 
   set dataSource(dataSource: { [key: string]: any }[]) {
     if (dataSource.length < this.#dataSource.length) {
@@ -88,7 +84,7 @@ export class TowifyTableService implements ITowifyTableService {
     }
     let tableWidth = 0;
     this.columnInfos.forEach(columnInfo => {
-      tableWidth += columnInfo.width ?? tableSizeConfigInfo.defaultColumnWidth;
+      tableWidth += columnInfo.width ?? 100;
     });
     this.dataContainerWidth = tableWidth;
     this.#updateRenderConfigCallbacks.forEach(value => {
