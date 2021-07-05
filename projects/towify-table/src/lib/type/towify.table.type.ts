@@ -5,13 +5,7 @@
 
 export type TableScrollDirectionType = 'up' | 'down' | 'left' | 'right' | 'unknown';
 
-export type TableColumnInfoType = {
-  displayName: string;
-  hashName: string;
-  type: string;
-  iconName: string;
-  width?: number;
-} & { [key: string]: any };
+export type TableColumnInfoType = { width: number } & { [key: string]: any };
 
 export const tableSizeConfigInfo = {
   tableWidth: 500,
