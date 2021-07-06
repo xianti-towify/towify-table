@@ -49,7 +49,7 @@ export class TowifyRowDefDirective implements OnDestroy {
     }
     for (
       let index = this.service.renderRange.startIndex;
-      index < this.service.renderRange.endIndex;
+      index <= this.service.renderRange.endIndex;
       index += 1
     ) {
       let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(

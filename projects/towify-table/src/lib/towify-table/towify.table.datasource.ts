@@ -28,7 +28,7 @@ export class TowifyTableDatasource {
     this.#service.updateRenderConfig();
   }
 
-  public scrollToIndex(index: number): void {
-    this.#service?.scrollToIndex(index);
+  public scrollToIndexPath(indexPath: { row: number; column: number }): void {
+    this.#service?.scrollToIndexPath(indexPath);
   }
 }

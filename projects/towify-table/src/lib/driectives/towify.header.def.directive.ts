@@ -3,7 +3,13 @@
  * @Date    : 2021/6/11
  * */
 
-import { Directive, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  EmbeddedViewRef,
+  OnDestroy,
+  TemplateRef,
+  ViewContainerRef
+} from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
@@ -11,6 +17,7 @@ import { TowifyTableService } from '../service/towify.table.service';
 })
 export class TowifyHeaderDefDirective implements OnDestroy {
   #updateRenderObserve: any;
+  #clearRenderObserve: any;
 
   constructor(
     private readonly templateRef: TemplateRef<any>,
@@ -21,15 +28,25 @@ export class TowifyHeaderDefDirective implements OnDestroy {
     this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
       this.updateRenderHeader();
     });
+    this.#clearRenderObserve = this.service.clearObserve.subscribe(() => {
+      this.viewContainerRef.clear();
+    });
   }
 
   updateRenderHeader(): void {
-    this.viewContainerRef.clear();
     this.service.columnInfos.forEach((columnInfo, index) => {
-      const headerView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
-        $implicit: columnInfo,
+      let headerView: EmbeddedViewRef<any> = this.viewContainerRef.get(
         index
-      });
+      ) as EmbeddedViewRef<any>;
+      if (!headerView) {
+        headerView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+          $implicit: columnInfo,
+          index
+        });
+      } else {
+        headerView.context.$implicit = columnInfo;
+        headerView.context.index = index;
+      }
       const element: HTMLElement = headerView.rootNodes[0];
       if (element) {
         element.style.position = 'relative';
@@ -46,5 +63,6 @@ export class TowifyHeaderDefDirective implements OnDestroy {
 
   ngOnDestroy() {
     this.#updateRenderObserve.unsubscribe();
+    this.#clearRenderObserve.unsubscribe();
   }
 }

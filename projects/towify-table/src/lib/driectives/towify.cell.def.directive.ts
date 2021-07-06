@@ -17,6 +17,7 @@ import { TowifyTableService } from '../service/towify.table.service';
 })
 export class TowifyCellDefDirective implements OnDestroy {
   #updateRenderObserve: any;
+  #clearRenderObserve: any;
 
   constructor(
     private readonly templateRef: TemplateRef<any>,
@@ -26,6 +27,9 @@ export class TowifyCellDefDirective implements OnDestroy {
     this.updateRenderCell();
     this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
       this.updateRenderCell();
+    });
+    this.#clearRenderObserve = this.service.clearObserve.subscribe(() => {
+      this.viewContainerRef.clear();
     });
   }
 
@@ -59,5 +63,6 @@ export class TowifyCellDefDirective implements OnDestroy {
 
   ngOnDestroy() {
     this.#updateRenderObserve.unsubscribe();
+    this.#clearRenderObserve.unsubscribe();
   }
 }

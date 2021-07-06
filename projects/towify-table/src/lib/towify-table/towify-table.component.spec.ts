@@ -8,9 +8,8 @@ describe('TowifyTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TowifyTableComponent ]
-    })
-    .compileComponents();
+      declarations: [TowifyTableComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
