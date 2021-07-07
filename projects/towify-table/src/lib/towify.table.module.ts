@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { TowifyRowDefDirective } from './driectives/towify.row.def.directive';
 import { TowifyTableDirective } from './driectives/towify.table.directive';
-import { TowifyTableComponent } from './towify-table/towify-table.component';
+import { TowifyTableComponent } from './towify.table/towify.table.component';
 import { TowifyColumnDefDirective } from './driectives/towify.column.def.directive';
 import { TowifyTableService } from './service/towify.table.service';
 

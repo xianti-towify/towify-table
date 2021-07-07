@@ -4,23 +4,30 @@
  * */
 
 import { EventEmitter, Injectable } from '@angular/core';
-import { TableColumnInfoType } from '../type/towify.table.type';
-import { ITowifyTableService } from '../interface/towify.table.service.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TowifyTableService implements ITowifyTableService {
+export class TowifyTableService {
   #dataSource: { [key: string]: any }[] = [];
-  #columnInfos: TableColumnInfoType[] = [];
+  #columnInfos: { [key: string]: any }[] = [];
 
   // 更新渲染的观察者，当需要更新渲染，通知组件更新
   updateRenderObserve: EventEmitter<any> = new EventEmitter<any>();
   clearObserve: EventEmitter<any> = new EventEmitter<any>();
 
   renderDataSource: { [key: string]: string | number | boolean | Date }[] = [];
-  renderRange: { startIndex: number; endIndex: number } = { startIndex: 0, endIndex: 10 };
-  dataContainerTranslate3d: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 };
+  renderRange: { startIndex: number; endIndex: number } = {
+    startIndex: 0,
+    endIndex: 10
+  };
+
+  dataContainerTranslate3d: { x: number; y: number; z: number } = {
+    x: 0,
+    y: 0,
+    z: 0
+  };
+
   renderItemSize = 0;
   rowHeight = 0;
   headerHeight = 0;
@@ -47,12 +54,12 @@ export class TowifyTableService implements ITowifyTableService {
     return this.#dataSource;
   }
 
-  set columnInfos(columnInfos: TableColumnInfoType[]) {
+  set columnInfos(columnInfos: { [key: string]: any }[]) {
     if (columnInfos.length < this.#columnInfos.length) this.clearObserve.emit();
     this.#columnInfos = columnInfos;
   }
 
-  get columnInfos(): TableColumnInfoType[] {
+  get columnInfos(): { [key: string]: any }[] {
     return this.#columnInfos;
   }
 
@@ -118,11 +125,9 @@ export class TowifyTableService implements ITowifyTableService {
     const columnXOffset: { start: number; end: number } = { start: 0, end: 0 };
     const lastDataContainerTranslate3dString = JSON.stringify(this.dataContainerTranslate3d);
     this.columnInfos.forEach((column, index) => {
-      if (index < indexPath.column) {
-        columnXOffset.start += column.width;
-      }
       if (index <= indexPath.column) {
-        columnXOffset.end += column.width;
+        if (index < indexPath.column) columnXOffset.start += column.width ?? 100;
+        columnXOffset.end += column.width ?? 100;
       }
     });
     // 检测 需要滚动的 indexPath 的数据 是否在当前显示区域内如果不在需要手动滚动到该 indexPath

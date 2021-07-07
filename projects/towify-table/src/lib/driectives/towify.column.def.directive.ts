@@ -51,7 +51,7 @@ export class TowifyColumnDefDirective implements OnDestroy {
       if (element) {
         element.style.position = 'relative';
         element.style.boxSizing = 'border-box';
-        element.style.width = `${columnInfo.width}px`;
+        element.style.width = `${columnInfo.width ?? 100}px`;
         element.style.height = '100%';
         if (index === 0 && this.service.stickyFirstColumn) {
           element.style.zIndex = '100';

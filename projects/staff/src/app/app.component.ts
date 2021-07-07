@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TableColumnInfoType } from '../../../towify-table/src/lib/type/towify.table.type';
-import { TowifyTableDatasource } from '../../../towify-table/src/lib/towify-table/towify.table.datasource';
+import { TowifyTableDatasource } from '../../../towify-table/src';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +20,7 @@ export class AppComponent implements OnInit {
 
   tableDataSource: TowifyTableDatasource = new TowifyTableDatasource();
 
-  columnInfos: TableColumnInfoType[] = [
+  columnInfos: { [key: string]: any }[] = [
     { hashName: 'id', displayName: '.No', width: 100, type: 'text', iconName: '' },
     { hashName: 'name', displayName: 'name', width: 200, type: 'text', iconName: '' },
     { hashName: 'age', displayName: 'age', width: 300, type: 'text', iconName: '' },

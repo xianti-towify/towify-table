@@ -14,16 +14,17 @@ import {
   TemplateRef
 } from '@angular/core';
 import { TowifyTableService } from '../service/towify.table.service';
-import { TableColumnInfoType } from '../type/towify.table.type';
 import { TowifyTableDatasource } from './towify.table.datasource';
 
 @Component({
   selector: 'towify-table',
-  templateUrl: './towify-table.component.html',
-  styleUrls: ['./towify-table.component.scss']
+  templateUrl: './towify.table.component.html',
+  styleUrls: ['./towify.table.component.scss']
 })
 export class TowifyTableComponent implements OnInit, OnChanges {
-  @ContentChild('header', { static: false }) headerTemplate!: TemplateRef<{ [key: string]: any }>;
+  @ContentChild('header', { static: false }) headerTemplate!: TemplateRef<{
+    [key: string]: any;
+  }>;
 
   @Input()
   dataSource: TowifyTableDatasource = new TowifyTableDatasource();
@@ -41,7 +42,7 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   stickyFirstColumn = false;
 
   @Input()
-  columnInfos: TableColumnInfoType[] = [];
+  columnInfos: { [key: string]: any }[] = [];
 
   tableHeight = 500;
   tableWidth = 700;
@@ -56,12 +57,8 @@ export class TowifyTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.service.tableContainerHeight = changes.tableHeight
-      ? changes.tableHeight.currentValue
-      : this.tableHeight;
-    this.service.tableContainerWidth = changes.tableWidth
-      ? changes.tableWidth.currentValue
-      : this.tableWidth;
+    this.service.tableContainerHeight = this.tableHeight;
+    this.service.tableContainerWidth = this.tableWidth;
     this.service.headerHeight = changes.headerHeight
       ? changes.headerHeight.currentValue
       : this.headerHeight;

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TowifyTableComponent } from './towify-table.component';
+import { TowifyTableComponent } from './towify.table.component';
 
 describe('TowifyTableComponent', () => {
   let component: TowifyTableComponent;

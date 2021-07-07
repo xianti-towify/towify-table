@@ -2,7 +2,6 @@
  * @Author  : xiongxianti
  * @Date    : 2021/6/11
  * */
-import { ITowifyTableService } from '../interface/towify.table.service.interface';
 import { TowifyTableService } from '../service/towify.table.service';
 
 export class TowifyTableDatasource {
@@ -10,8 +9,8 @@ export class TowifyTableDatasource {
 
   #data: { [key: string]: any }[] = [];
 
-  set service(service: ITowifyTableService) {
-    this.#service = service as TowifyTableService;
+  set service(service: TowifyTableService) {
+    this.#service = service;
   }
 
   set data(data: { [key: string]: any }[]) {
