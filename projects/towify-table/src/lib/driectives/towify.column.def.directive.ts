@@ -1,6 +1,6 @@
 /**
  * @Author  : xiongxianti
- * @Date    : 2021/6/11
+ * @Date    : 2021/6/16
  * */
 
 import {
@@ -13,9 +13,9 @@ import {
 import { TowifyTableService } from '../service/towify.table.service';
 
 @Directive({
-  selector: '[towifyHeaderDef]'
+  selector: '[towifyColumnDef]'
 })
-export class TowifyHeaderDefDirective implements OnDestroy {
+export class TowifyColumnDefDirective implements OnDestroy {
   #updateRenderObserve: any;
   #clearRenderObserve: any;
 
@@ -24,30 +24,30 @@ export class TowifyHeaderDefDirective implements OnDestroy {
     private readonly viewContainerRef: ViewContainerRef,
     private readonly service: TowifyTableService
   ) {
-    this.updateRenderHeader();
+    this.updateRenderCell();
     this.#updateRenderObserve = this.service.updateRenderObserve.subscribe(() => {
-      this.updateRenderHeader();
+      this.updateRenderCell();
     });
     this.#clearRenderObserve = this.service.clearObserve.subscribe(() => {
       this.viewContainerRef.clear();
     });
   }
 
-  updateRenderHeader(): void {
+  updateRenderCell(): void {
     this.service.columnInfos.forEach((columnInfo, index) => {
-      let headerView: EmbeddedViewRef<any> = this.viewContainerRef.get(
+      let currentView: EmbeddedViewRef<any> = this.viewContainerRef.get(
         index
       ) as EmbeddedViewRef<any>;
-      if (!headerView) {
-        headerView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+      if (!currentView) {
+        currentView = this.viewContainerRef.createEmbeddedView(this.templateRef, {
           $implicit: columnInfo,
           index
         });
       } else {
-        headerView.context.$implicit = columnInfo;
-        headerView.context.index = index;
+        currentView.context.$implicit = columnInfo;
+        currentView.context.index = index;
       }
-      const element: HTMLElement = headerView.rootNodes[0];
+      const element: HTMLElement = currentView.rootNodes[0];
       if (element) {
         element.style.position = 'relative';
         element.style.boxSizing = 'border-box';

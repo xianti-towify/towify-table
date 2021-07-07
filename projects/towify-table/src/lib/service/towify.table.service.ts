@@ -77,13 +77,13 @@ export class TowifyTableService implements ITowifyTableService {
           Math.floor(this.dataContainerTranslate3d.y / this.rowHeight) - 1,
           0
         );
-      } else {
+      } else if (this.dataContainerTranslate3d.y < this.renderRange.startIndex * this.rowHeight) {
         this.dataContainerTranslate3d.y = this.renderRange.startIndex * this.rowHeight;
       }
       this.renderRange.endIndex =
         this.renderRange.startIndex + this.renderItemSize < this.dataSource.length
           ? this.renderRange.startIndex + this.renderItemSize
-          : this.dataSource.length - 1;
+          : this.dataSource.length;
       this.renderDataSource = this.dataSource.slice(
         this.renderRange.startIndex,
         Math.min(this.renderRange.endIndex + 1, this.dataSource.length)
